@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.green-blue.min.css"/>
+    <link href='http://fonts.googleapis.com/css?family=Titillium+Web:400,300,600' rel='stylesheet' type='text/css'>
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+    <link rel="stylesheet" type="text/css" href="dialog-polyfill.css" />
+    <link rel="stylesheet" href="sign-up-login-form/css/style.css">
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+
+
+      <script src="sign-up-login-form/js/index.js"></script>
+    <!-- Uses a transparent header that draws on top of the layout's background -->
+</head>
+
+<body style="background:url('Images/healthcare.png') bottom right 15%;background-size:contain;background-repeat:no-repeat;background-color:#212121;">
+    <!--Firebase Key-->
+
+    <script src="https://www.gstatic.com/firebasejs/3.7.5/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyCBaUe_6O81dm94VNnuZogypJg3OMju_4E",
+        authDomain: "hackathon-cc290.firebaseapp.com",
+        databaseURL: "https://hackathon-cc290.firebaseio.com",
+        projectId: "hackathon-cc290",
+        storageBucket: "hackathon-cc290.appspot.com",
+        messagingSenderId: "59757377805"
+      };
+      firebase.initializeApp(config);
+    </script>
+
+
+    <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+    <script src="dialog-polyfill.js"></script>
+    <script src="index.js"></script>
+    <link rel="stylesheet" href="style.css">
+
+
+
+
+
+
+
+    <style>
+    .demo-layout-transparent {
+        background-color: #424242;
+    }
+    .demo-layout-transparent .mdl-layout__header,
+    .demo-layout-transparent .mdl-layout__drawer-button {
+      color: WHITE;
+    }
+    </style>
+
+
+    <!--TRANSPERENT BACKGROUND LAYOUT CODE-->
+
+      <div class="demo-layout-waterfall mdl-layout mdl-js-layout">
+        <header class="mdl-layout__header mdl-layout__header--waterfall">
+          <div class="mdl-layout__header-row">
+            <!-- Title -->
+            <span class="mdl-layout-title">Invincibles</span>
+            <!-- Add spacer, to align navigation to the right -->
+            <div class="mdl-layout-spacer"></div>
+            <!-- Navigation -->
+            <nav class="mdl-navigation">
+              <button class="mdl-button mdl-button--raised mdl-js-ripple-effect mdl-button--raised" style="background-color:#1b5e20;color:white" onclick="showSignInDialog();">
+              Register
+              </button>&nbsp&nbsp&nbsp&nbsp&nbsp
+              <button class="mdl-button mdl-button--raised mdl-js-ripple-effect mdl-button--raised" style="background-color:#1b5e20;color:white" onclick="showLoginDialog();">
+                Log In
+              </button>
+            </nav>
+          </div>
+        </header>
+
+        <main class="mdl-layout__content">
+
+
+
+        </main>
+      </div>
+
+        <!---***************** LOGIN DIALOG *********************************--->
+
+        <dialog id="loginDialog" style="" class="mdl-dialog" style="background-color:#212121">
+          <h4 id="fireHeading" class="mdl-dialog__title">Login</h4>
+          <div class="mdl-dialog__content">
+            <p id="loginError">....</p>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <input class="mdl-textfield__input" type="text" id="loginEmail"  >
+              <label class="mdl-textfield__label" for="sample3">Enter UID...</label>
+            </div>
+            <br>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" type="password" id="loginPassword">
+                <label class="mdl-textfield__label" for="sample4" >Password...</label>
+            </div>
+          </div>
+          <div class="mdl-dialog__actions">
+
+            <button type="button" class="mdl-button" id="loginModalCancelButton"onclick="closeLoginModal();"style="background-color:#1b5e20;color:white">Cancel</button>
+
+            <button type="button" class="mdl-button" id="loginButton" onclick="onLoginClick();" style="background-color:#1b5e20;color:white">Login</button>
+
+            <button type="button" id="googleButton" class="mdl-button" onclick="loginWithGoogle();"><img src="images/g+logo.png" width="20" height="20"> Google</button>
+            <!-- MDL Progress Bar with Indeterminate Progress -->
+
+            <div id="loginProgress" class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
+          </div>
+        </dialog>
+
+        <!---************************* SIGN IN DIALOG ***********************--->
+
+        <dialog id="signInDialog" style="" class="mdl-dialog" background-color="BLACK">
+
+          <span class="mdl-chip mdl-chip--deletable" style="float:right">
+              <button type="button" class="mdl-chip__action" onclick="closeSignUpModal()"><i class="material-icons">cancel</i></button>
+          </span>
+          <h4 id="fireHeading" class="mdl-dialog__title">Sign Up</h4>
+          <!-- Deletable Chip -->
+          <div class="mdl-dialog__content">
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <input class="mdl-textfield__input" type="text" id="registerName">
+              <label class="mdl-textfield__label" for="sample3">Enter Your Name...</label>
+            </div>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <input class="mdl-textfield__input" type="email" id="registerEmail">
+              <label class="mdl-textfield__label" for="sample3">Enter Email...</label>
+            </div>
+
+            <!--Gender Radio Button---------->
+
+
+            <br>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <input class="mdl-textfield__input" type="password" id="registerPassword1"  >
+              <label class="mdl-textfield__label" for="sample3">Enter Password...</label>
+            </div>
+            <br>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" type="password" id="registerPassword2">
+                <label class="mdl-textfield__label" for="sample4" >Confirm Password...</label>
+            </div>
+
+
+              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" type="date" id="dateOfBirth">
+                <label class="mdl-textfield__label" for="sample3">Date of Birth</label>
+              </div>
+            <br>
+
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                SELECT YOUR GENDER:<br>
+                <select id="selectGender" name="example">
+                <option value="Male">Male
+                <option value="Female">Female
+                </select>
+            </div>
+
+
+          </div>
+          <div class="mdl-dialog__actions">
+            <br>
+              <button type="button" class="mdl-button" onclick="SignInFuction();"><img src="images/g+logo.png" style="width:23px;height:23px;"></button>
+              <button type="button" class="mdl-button" id="registerButton" onclick="signInEmailPassword();" style="background-color:#1b5e20;color:white">Register</button>
+            <!-- MDL Progress Bar with Indeterminate Progress -->
+            <div id="loginProgress" class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
+          </div>
+        </dialog>
+
+        <!-- DIALOG BOX FOR ASKING NEW PASSWORD -->
+
+        <dialog id="setPassword" class="mdl-dialog">
+          <h4 class="mdl-dialog__title">Set Password</h4>
+          <div class="mdl-dialog__content">
+            <!-- Textfield with Floating Label -->
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" type="text" id="newPassword">
+                <label class="mdl-textfield__label" for="sample3">New Password</label>
+            </div>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" type="text" id="confirmPassword">
+                <label class="mdl-textfield__label" for="sample3">Confirm Password</label>
+            </div>
+          </div>
+          <div class="mdl-dialog__actions">
+            <button type="button" class="mdl-button" onclick="setNewPassword();">Submit</button>
+
+          </div>
+        </dialog>
+
+        <!--********************DIALOG BOX FOR UNVERIFIED USER***********-->
+        <dialog id="unverifiedUserDialog" class="mdl-dialog">
+          <h4 class="mdl-dialog__title">Account Not Yet Verified.</h4>
+          <div class="mdl-dialog__content">
+            <p>
+              Verification mail has been sent to your e-mail.
+            </p>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" id="resetEmail">
+                <input class="mdl-textfield__input" type="email" id="resetEmailAddress" >
+                <label class="mdl-textfield__label" for="sample3">Reset Email...</label>
+            </div>
+          </div>
+          <div class="mdl-dialog__actions">
+              <button id="resetEmailButton" type="button" class="mdl-button" onclick="resetUsersEmail();">RESET</button>
+            <button id="resetEmailOkButton" type="button" class="mdl-button" onclick="SignOutFunction();">Ok</button>
+            <button id="changeEmailButton" type="button" class="mdl-button close" onClick="onResetEmailFunction();">Change email</button>
+          </div>
+        </dialog>
+
+
+
+        <!--********************DIALOG BOX FOR USER TYPE***********-->
+        <dialog id="userTypeDialog" class="mdl-dialog">
+          <h4 class="mdl-dialog__title">Please Mention your user type type.</h4>
+          <div class="mdl-dialog__content">
+
+            <select id="selectType" name="example">
+                <option value="Doctor">Doctor
+                <option value="Patient">Patient
+            </select>
+          </div>
+          <div class="mdl-dialog__actions">
+              <button id="typeSubmitButton" type="button" class="mdl-button" onclick="closeTypeDialog();">Proceed</button>
+
+          </div>
+        </dialog>
+
+
+
+        <!---JAVACRIPT AREA--------------------------->
+
+      <script>
+
+          loginWithGoogleVariable = false;
+
+          /*---------------------------OPEN DIALOG TO CHOOSE USER TYPE -------------------*/
+          function openTypeDialog()
+          {
+            var dialog = document.querySelector('#userTypeDialog');
+            if (! dialog.showModal) {
+                dialogPolyfill.registerDialog(dialog);
+            }
+            dialog.showModal();
+          }
+
+          /*--------------------------CLOSE USER TYPE DIALOG-------------------*/
+          function closeTypeDialog()
+          {
+            var dialog = document.querySelector('#userTypeDialog');
+            if (! dialog.showModal) {
+                dialogPolyfill.registerDialog(dialog);
+            }
+            dialog.close();
+
+          }
+
+
+          /*---------------------------RESET THE EMAIL OF USER-------------------*/
+
+
+          function resetUsersEmail()
+          {
+                  var isEmailUpdated = false;
+                  var user = firebase.auth().currentUser;
+                  var emailAddress = $("#resetEmailAddress").val();
+                  alert(emailAddress);
+
+                  user.updateEmail(emailAddress).then(function() {
+                  // Update successful.
+                  alert("Your Email Has been updated successfully");
+                  isEmailUpdated = true;
+                  alert("Inside Function");
+
+                  user.sendEmailVerification().then(function()
+                  {
+                            alert("Verification Email Sent to your new Email");
+                            location.reload();
+                            isEmailUpdated =false;
+                            SignOutFunction();
+
+                          }, function(error) {
+                            // An error happened.
+                          });
+
+                    }, function(error) {
+                    // An error happened.
+                    alert(error.message);
+                  });
+                if(isEmailUpdated == true)
+                {
+                  var usr = firebase.auth().currentUser;
+
+                }
+           }
+
+          /*---------------------------ON CLICK OF RESET EMAIL/CHANGE EMAIL------*/
+
+          function onResetEmailFunction(){
+
+                $("#resetEmail").show();
+                $("#resetEmailOkButton").hide();
+                $("#changeEmailButton").hide()
+                $("#resetEmailButton").show();
+          }
+
+          /*---------------------------unverifiedUserDialog OPENER --------------*/
+          function unverifiedUserDialog()
+          {
+
+              var dialog = document.querySelector('#unverifiedUserDialog');
+              if (! dialog.showModal) {
+                  dialogPolyfill.registerDialog(dialog);
+              }
+              dialog.showModal();
+          }
+
+
+          /*------GLOBAL VARIABLES----------------*/
+
+          var isRegistering = false;
+          var isGoogleRegistered = false;
+
+
+
+          function registerUser(){
+
+            signInEmailPassword();
+          }
+
+
+
+
+          /*------SHOWING SIGNIN DIALOG-------*/
+
+
+          function showSignInDialog()
+          {
+            {
+
+              var dialog = document.querySelector('#signInDialog');
+              if (! dialog.showModal) {
+                  dialogPolyfill.registerDialog(dialog);
+              }
+              dialog.showModal();
+            }
+          }
+
+
+          /*--------------------SHOWING LOGIN DIALOG-------------*/
+
+          function showLoginDialog()
+          {
+
+            var dialog = document.querySelector('#loginDialog');
+            if (! dialog.showModal) {
+                dialogPolyfill.registerDialog(dialog);
+            }
+            dialog.showModal();
+          }
+
+          /*---------CLOSE SIGN UP MODAL-------*/
+
+          function closeSignUpModal()
+          {
+            var dialog = document.querySelector('#signInDialog');
+            dialog.close();
+          }
+
+          /*-----------CLOSE LOGIN MODAL----------*/
+
+          function closeLoginModal()
+          {
+            var dialog = document.querySelector('#loginDialog');
+            dialog.close();
+          }
+
+          /*------------------ON AUTH STATECHANGED-------------*/
+
+          firebase.auth().onAuthStateChanged(function(user)
+          {
+            if (user) {
+                  // User is signed in.
+                    var userIn = firebase.auth().currentUser;
+                    var emailVerified = userIn.emailVerified;
+                    var uid = userIn.uid;
+                    var gender = $("#selectGender").val();
+                    alert("Gender is"+gender);
+                    alert("Logged In");
+
+                    if(isRegistering==true)
+                    {
+                      alert("Yes He is new User");
+                      openTypeDialog();
+                      var name = $("#registerName").val()
+                      var email = $("#registerEmail").val();
+                      var password1 = $("#registerPassword1").val();
+                      var password2 = $("#registerPassword2").val();
+                      var dateOfBirth = $("#dateOfBirth").val();
+
+                      alert("Got User"+uid);
+                      /*CONNECTIN TO DATABASE*/
+
+                          var dabaseRefForRegister = firebase.database();
+                          var newRef = dabaseRefForRegister.ref("User");
+
+                          alert("Connected To DB");
+                          alert("Name:"+name+" Email: "+email);
+
+                          newRef.child(uid).set(name);
+                          alert("First Ref Done");
+                          //var databaseRef = firebase.database();
+                          var SecondRef = dabaseRefForRegister.ref("UserData/"+uid);
+
+                          SecondRef.child("username").set(name);
+                          SecondRef.child("imageURL").set("https://firebasestorage.googleapis.com/v0/b/digisecure-c33bf.appspot.com/o/default.jpg?alt=media&token=eb927b43-5b80-4bfb-808d-3ca3dce1ea76");
+                          SecondRef.child("isGmailUser").set("false");
+                          SecondRef.child("dateOfBirth").set(dateOfBirth);
+                          SecondRef.child("type").set($("#selectType").val());
+                          if($("#selectType").val()=="Doctor")
+                          {
+
+                            SecondRef.child("license").set("null");
+                          }
+                          alert("Second Ref done");
+                          isRegistering = false;
+
+
+
+                          userIn.sendEmailVerification().then(function() {
+                            alert("Email Sent");
+                            //location.reload();
+                          }, function(error) {
+                            // An error happened.
+                          });
+
+
+                        alert("Done.");
+
+                    }
+                    else {
+                          alert("He is an old user");
+
+                          if(emailVerified == false)
+                          {
+                              unverifiedUserDialog();
+                          }
+                          else
+                          {
+                              alert("Verified:"+emailVerified);
+                          //  window.location="HomePage.html";
+                          }
+
+                  }
+
+            }
+            else
+            {
+                alert("Logged Out");
+            }
+          });
+
+          /*---------- SIGN IN WITH EMAIL AND PASSWORD ---------------*/
+
+          function signInEmailPassword(){
+
+            closeSignUpModal();
+            alert("Account successfully created.Login to your account.");
+            var email = $("#registerEmail").val();
+            var password1 = $("#registerPassword1").val();
+            var password2 = $("#registerPassword2").val();
+            alert("Inside Function1");
+            alert(password1);
+            alert(password2);
+            if(password1 == password2)
+            {     alert("Inside Function2");
+                firebase.auth().createUserWithEmailAndPassword(email, password1).then(function(result){
+
+                      isRegistering = true;
+                      alert(email);
+
+                }).catch(function(error) {
+                  // Handle Errors here.
+                    alert("Inside Error");
+                    alert(error.message);
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+
+                  // ...
+                });
+            }
+            else
+            {
+              alert("Password not matching");
+            }
+          }
+
+          /*----------- CODE FOR SETTING NEW PASSWORD-------*/
+
+          function setNewPassword(){
+            var user = firebase.auth().currentUser;
+            var newPassword = $("#newPassword").val();
+            var confirmPassword = $("#confirmPassword").val();
+            if(newPassword == confirmPassword){
+              user.updatePassword(newPassword).then(function() {
+                // Update successful.
+                alert("successful");
+                var dialog = document.querySelector('#setPassword');
+                dialog.close();
+
+
+              }, function(error) {
+                // An error happened.
+                alert("Password doesnt match..!!")
+              });
+            }
+          }
+
+          /*------------------- SIGN IN WITH GOOGLE ----------------*/
+
+          function SignInFuction()
+          {
+
+            var provider = new firebase.auth.GoogleAuthProvider();
+
+            firebase.auth().signInWithPopup(provider).then(function(result) {
+              // This gives you a Google Access Token. You can use it to access the Google API.
+              var token = result.credential.accessToken;
+              // The signed-in user info.
+              var user = result.user;
+              openTypeDialog();
+
+              /*-------UPLOAD REGISTERED USER-------------------*/
+                var user = firebase.auth().currentUser;
+                  var name, email, photoUrl, uid, emailVerified;
+                  if (user) {
+                    // User is signed in.
+                      name = user.displayName;
+                      email = user.email;
+                      photoUrl = user.photoURL;
+                      emailVerified = user.emailVerified;
+
+                      uid = user.uid;
+                      alert("Name:"+name+" email: "+email+" photoUrl: "+photoUrl);
+
+                      var databaseRefWithGoogle = firebase.database();
+                      var firstRefWithGoogle = databaseRefWithGoogle.ref("User");
+                      alert("First ref Connected to database");
+
+                      firstRefWithGoogle.child(uid).set(name);
+                      alert("First Ref added");
+                      //var databaseRef = firebase.database();
+                      var secondRefWithGoogle = databaseRefWithGoogle.ref("UserData/"+uid);
+                      alert("Second ref connected");
+                      secondRefWithGoogle.child("username").set(name);
+                      secondRefWithGoogle.child("imageURL").set(photoUrl);
+                      secondRefWithGoogle.child("dateOfBirth").set(null);
+                      secondRefWithGoogle.child("isGmailUser").set("true");
+                      secondRefWithGoogle.child("type").set($("#selectType").val());
+                      if($("#selectType").val() == "Doctor")
+                      {
+
+                        secondRefWithGoogle.child("license").set("null");
+                      }
+                      alert("Second ref added");
+                      isGoogleRegistered = true;
+                      alert("Account Successfully created Please Login");
+                      if(loginWithGoogleVariable == true)
+                      {
+                        loginWithGoogleVariable = false;
+                        window.location="HomePage.html";
+                      }
+                      //window.location="HomePage.html";
+                  }
+
+              }).catch(function(error) {
+              // Handle Errors here.
+              alert(error.message);
+              var errorCode = error.code;
+              var errorMessage = error.message;
+              // The email of the user's account used.
+              var email = error.email;
+              // The firebase.auth.AuthCredential type that was used.
+              var credential = error.credential;
+              // ...
+            });
+          }
+
+
+
+          /*------------------LOGIN FUNCTION WITH GOOGLE-------------*/
+          function loginWithGoogle()
+          {
+            alert("inside Function");
+            loginWithGoogleVariable = true;
+            SignInFuction();
+          }
+
+          /*------------INITIALLY DISABLE EMAIL TEXT BOX  AND RESET BUTTON IN RESET EMAIL SECTION-----------*/
+          $("#resetEmail").hide();
+          $("#resetEmailButton").hide();
+          //$("#newPassword").val();
+
+      </script>
+
+  </body>
+</html>
